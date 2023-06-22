@@ -1,3 +1,3 @@
- *.o
- *.d
- checkers
+checkers
+*.d
+*.o
