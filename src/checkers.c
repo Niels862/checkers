@@ -31,29 +31,12 @@ void checkers_print_board(char board[WIDTH][HEIGHT]) {
         printf("%d ", HEIGHT - y);
         for (x = 0; x < WIDTH; x++) {
             piece = board[x][y];
-            if ((x + y) % 2) {
-                printf("\033[31;47m ");
+            if ((x + y) % 2 == 0) {
+                printf("\033[47m ");
             } else {
                 printf("\033[0m ");
             }
-            if (piece & IS_PIECE) {
-                if (piece & IS_WHITE) {
-                    if (piece & IS_KING) {
-                        printf("\u26C1");
-                    } else {
-                        printf("\u26C0");
-                    }
-                } else {
-                    if (piece & IS_KING) {
-                        printf("\u26C3");
-                    } else {
-                        printf("\u26C2");
-                    }
-                }
-            } else {
-                printf(" ");
-            }
-            printf(" ");
+            checkers_print_piece(piece);
         }
         printf("\033[0m\n");
     }
@@ -62,6 +45,26 @@ void checkers_print_board(char board[WIDTH][HEIGHT]) {
         printf(" %c ", 'A' + x);
     }
     printf("\n");
+}
+
+void checkers_print_piece(char piece) {
+    if (piece & IS_PIECE) {
+        if (piece & IS_WHITE) {
+            if (piece & IS_KING) {
+                printf("\u26C1 ");
+            } else {
+                printf("\u26C0 ");
+            }
+        } else {
+            if (piece & IS_KING) {
+                printf("\u26C3 ");
+            } else {
+                printf("\u26C2 ");
+            }
+        }
+    } else {
+        printf("  ");
+    }
 }
 
 int checkers_evaluate_board(char board[WIDTH][HEIGHT]) {

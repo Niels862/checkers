@@ -15,8 +15,15 @@
 #define WIDTH      10
 #define HEIGHT     10
 
+typedef struct {
+    char *board;
+    int width;
+    int height;
+} CheckersGame;
+
 void checkers_setup_board(char board[WIDTH][HEIGHT]);
 void checkers_print_board(char board[WIDTH][HEIGHT]);
+void checkers_print_piece(char piece);
 int checkers_evaluate_board(char board[WIDTH][HEIGHT]);
 int checkers_evaluate_piece(char board[WIDTH][HEIGHT], int x, int y);
 
