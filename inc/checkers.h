@@ -15,16 +15,21 @@
 #define WIDTH      10
 #define HEIGHT     10
 
+#define PIECE_AT(game, x, y) game->board[y * game->width + x]
+#define PIECE_AT_IDX(game, i) game->board[i]
+
 typedef struct {
     char *board;
     int width;
     int height;
 } CheckersGame;
 
-void checkers_setup_board(char board[WIDTH][HEIGHT]);
-void checkers_print_board(char board[WIDTH][HEIGHT]);
+void checkers_play_game();
+int checkers_parse_input(CheckersGame *game, char buffer[], int *x, int *y);
+void checkers_setup_game(CheckersGame *game, int width, int height, int filled_rows);
+void checkers_print_board(CheckersGame *game);
 void checkers_print_piece(char piece);
-int checkers_evaluate_board(char board[WIDTH][HEIGHT]);
-int checkers_evaluate_piece(char board[WIDTH][HEIGHT], int x, int y);
+int checkers_evaluate_board(CheckersGame *game);
+int checkers_evaluate_piece(CheckersGame *game, int x, int y);
 
 #endif
