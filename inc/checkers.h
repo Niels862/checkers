@@ -15,8 +15,9 @@
 #define WIDTH      10
 #define HEIGHT     10
 
-#define PIECE_AT(game, x, y) game->board[y * game->width + x]
-#define PIECE_AT_IDX(game, i) game->board[i]
+#define PIECE_AT(game, x, y) (game)->board[(y) * (game)->width + (x)]
+#define PIECE_AT_IDX(game, i) (game)->board[i]
+#define POS_ON_BOARD(game, x, y) (x) >= 0 && (x) < (game)->width && (y) >= 0 && (y) < (game)->height
 
 typedef struct {
     char *board;
@@ -31,5 +32,9 @@ void checkers_print_board(CheckersGame *game);
 void checkers_print_piece(char piece);
 int checkers_evaluate_board(CheckersGame *game);
 int checkers_evaluate_piece(CheckersGame *game, int x, int y);
+int checkers_man_can_take_piece(CheckersGame *game, int x, int y, int dx, int dy);
+int checkers_man_count_max_takes(CheckersGame *game, int x, int y);
+void checkers_man_take_piece(CheckersGame *game, int x, int y, int dx, int dy);
+void checkers_man_undo_take_piece(CheckersGame *game, int x, int y, int dx, int dy, char taken_piece);
 
 #endif

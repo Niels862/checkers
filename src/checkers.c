@@ -9,6 +9,7 @@ void checkers_play_game() {
     int x, y;
 
     checkers_setup_game(&game, 10, 10, 4);
+
     checkers_print_board(&game);
     fgets(buffer, 32, stdin);
 
@@ -122,8 +123,51 @@ int checkers_evaluate_board(CheckersGame *game) {
 }
 
 int checkers_evaluate_piece(CheckersGame *game, int x, int y) {
+    // Placeholder
     if (PIECE_AT(game, x, y) & IS_PIECE) {
         return 1;
     }
     return 0;
+}
+
+int checkers_man_can_take_piece(CheckersGame *game, int x, int y, int dx, int dy) {
+    return POS_ON_BOARD(game, x + 2 * dx, y + 2 * dy)
+            // Piece to be taken
+            && PIECE_AT(game, x + dx, y + dy) & IS_PIECE
+            // Opposite sides
+            && ((PIECE_AT(game, x, y) & IS_WHITE)
+                != (PIECE_AT(game, x + dx, y + dy) & IS_WHITE))
+            // Empty
+            && !(PIECE_AT(game, x + 2 * dx, y + 2 * dy) & IS_PIECE);
+}
+
+int checkers_man_count_max_takes(CheckersGame *game, int x, int y) {
+    int dx, dy, takes;
+    int max_takes = 0;
+    char taken_piece;
+    for (dx = -1; dx <= 1; dx += 2) {
+        for (dy = -1; dy <= 1; dy += 2) {
+            if (checkers_man_can_take_piece(game, x, y, dx, dy)) {
+                printf("%d %d\n", dx, dy);
+                taken_piece = PIECE_AT(game, x + dx, y + dy);
+                checkers_man_take_piece(game, x, y, dx, dy);
+                takes = checkers_man_count_max_takes(game, x, y) + 1;
+                checkers_man_undo_take_piece(game, x, y, dx, dy, taken_piece);
+                if (takes > max_takes) {
+                    max_takes = takes;
+                }
+            }
+        }
+    }
+    return max_takes;
+}
+
+void checkers_man_take_piece(CheckersGame *game, int x, int y, int dx, int dy) {
+    PIECE_AT(game, x + 2 * dx, y + 2 * dy) = PIECE_AT(game, x, y);
+    PIECE_AT(game, x, y) = PIECE_AT(game, x + dx, y + dy) = EMPTY;
+}
+
+void checkers_man_undo_take_piece(CheckersGame *game, int x, int y, int dx, int dy, char taken_piece) {
+    PIECE_AT(game, x, y) = PIECE_AT(game, x + 2 * dx, y + 2 * dy);
+    PIECE_AT(game, x + dx, y + dy) = taken_piece;
 }
